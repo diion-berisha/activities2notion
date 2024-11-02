@@ -22,9 +22,7 @@ class NotionClient:
         payload = {
             "parent": {"database_id": self.database_id},
             "properties": {
-                "Name": {
-                    "title": [{"text": {"content": activity_data["name"]}}]
-                },
+                "Name": {"title": [{"text": {"content": activity_data["name"]}}]},
                 "Distance (m)": {"number": activity_data["distance"]},
                 "Moving Time (s)": {"number": activity_data["moving_time"]},
                 "Elapsed Time (s)": {"number": activity_data["elapsed_time"]},
