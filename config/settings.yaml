@@ -1,0 +1,14 @@
+strava:
+  activity_types:
+    - Run
+    - Ride
+    - Swim
+  polling_interval: 300  # seconds
+
+notion:
+  database_properties:
+    activity_name: "Name"
+    activity_type: "Type"
+    distance: "Distance"
+    duration: "Duration"
+    date: "Date"
