@@ -1,33 +1,47 @@
-import json
+import os
 
 import requests
-from oauth import NotionOAuth
+from dotenv import load_dotenv
 
-# Load configuration from secrets.json
-with open("config/secrets.json") as f:
-    config = json.load(f)
+from .oauth import NotionOAuth
 
-DATABASE_ID = config["notion_database_id"]
+load_dotenv()
+
+DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
+
 NOTION_BASE_URL = "https://api.notion.com/v1"
 
 
 class NotionClient:
     def __init__(self):
-        self.oauth = NotionOAuth()
+        self.headers = NotionOAuth().get_headers()
         self.database_id = DATABASE_ID
 
     def create_activity_entry(self, activity_data):
         url = f"{NOTION_BASE_URL}/pages"
-        headers = self.oauth.get_headers()
+        headers = self.headers
+        sport_type = activity_data.get("type", "")
+
+        # TODO: Add support for different sport types
+        # if sport_type == "Ride":
+        #     payload = self.create_ride_entry(activity_data)
+        # elif sport_type == "Swim":
+        #     payload = self.create_swim_entry(activity_data)
+        # else:
+        #     payload = self.create_run_entry(activity_data)
+
         payload = {
             "parent": {"database_id": self.database_id},
             "properties": {
-                "Name": {"title": [{"text": {"content": activity_data["name"]}}]},
-                "Distance (m)": {"number": activity_data["distance"]},
-                "Moving Time (s)": {"number": activity_data["moving_time"]},
-                "Elapsed Time (s)": {"number": activity_data["elapsed_time"]},
-                "Type": {"select": {"name": activity_data["type"]}},
-                "Date": {"date": {"start": activity_data["start_date"]}},
+                "Name": {
+                    "title": [{"text": {"content": activity_data.get("name", "")}}]
+                },
+                "Distance (m)": {"number": activity_data.get("distance", 0)},
+                "Moving Time (s)": {"number": activity_data.get("moving_time", 0)},
+                "Elapsed Time (s)": {"number": activity_data.get("elapsed_time", 0)},
+                "Type": {"select": {"name": sport_type}},
+                "Date": {"date": {"start": activity_data.get("start_date", "")}},
+                "Private Notes": {"notes": activity_data.get("private_notes", "")},
             },
         }
 
@@ -38,6 +52,15 @@ class NotionClient:
             raise Exception(
                 f"Failed to add activity to Notion: {response.status_code} - {response.text}"
             )
+
+    # def create_ride_entry(self, activity_data):
+    #     pass
+
+    # def create_swim_entry(self, activity_data):
+    #     pass
+
+    # def create_run_entry(self, activity_data):
+    #     pass
 
 
 # Usage
