@@ -11,10 +11,13 @@ class StravaClient:
     def fetch_latest_activity(self):
         access_token = self.oauth.get_access_token()
         headers = {"Authorization": f"Bearer {access_token}"}
+
         response = requests.get(
             f"{API_BASE}/athlete/activities",
             headers=headers,
-            params={"per_page": 1},
+            params={
+                "per_page": 1,
+            },
         )
 
         if response.status_code == 200:

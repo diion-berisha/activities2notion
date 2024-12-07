@@ -1,10 +1,9 @@
-import json
+import os
 
-# Load config from secrets.json
-with open("config/secrets.json") as f:
-    config = json.load(f)
+from dotenv import load_dotenv
 
-NOTION_TOKEN = config["notion_token"]
+load_dotenv()
+NOTION_TOKEN = os.getenv("NOTION_API_KEY")
 NOTION_VERSION = "2022-06-28"
 
 

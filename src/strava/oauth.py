@@ -1,15 +1,20 @@
-import json
+# import json
+
+# Load config
+import os
 import time
 
 import requests
+from dotenv import load_dotenv, set_key
 
-# Load config
-with open("config/secrets.json") as f:
-    config = json.load(f)
+load_dotenv()
 
-CLIENT_ID = config["strava_client_id"]
-CLIENT_SECRET = config["strava_client_secret"]
-REFRESH_TOKEN = config["strava_refresh_token"]
+CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
+CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
+REFRESH_TOKEN = os.getenv("STRAVA_REFRESH_TOKEN")
+ACCESS_TOKEN = os.getenv("STRAVA_ACCESS_TOKEN")
+TOKEN_EXPIRY = os.getenv("STRAVA_TOKEN_EXPIRY")
+
 TOKEN_URL = "https://www.strava.com/oauth/token"
 
 
@@ -21,14 +26,14 @@ class StravaOAuth:
 
     def _save_tokens(self):
         # Save the refresh token and other configuration changes
-        config["strava_refresh_token"] = self.refresh_token
-        with open("config/secrets.json", "w") as f:
-            json.dump(config, f)
+        set_key(".env", "STRAVA_REFRESH_TOKEN", self.refresh_token)
+        set_key(".env", "STRAVA_ACCESS_TOKEN", self.access_token)
+        set_key(".env", "STRAVA_TOKEN_EXPIRY", str(self.token_expiry))
 
     def refresh_access_token(self):
         response = requests.post(
             TOKEN_URL,
-            data={
+            params={
                 "client_id": CLIENT_ID,
                 "client_secret": CLIENT_SECRET,
                 "grant_type": "refresh_token",
@@ -47,6 +52,11 @@ class StravaOAuth:
 
     def get_access_token(self):
         # Refresh token if needed
-        if self.access_token is None or time.time() >= self.token_expiry:
+
+        # TODO: Create initial token if not exists
+
+        if ACCESS_TOKEN is None or time.time() >= float(TOKEN_EXPIRY):
             self.refresh_access_token()
+
+        self.access_token = ACCESS_TOKEN
         return self.access_token
