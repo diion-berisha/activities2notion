@@ -3,6 +3,9 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from utils.extract import jmes_path
+from utils.properties import define_properties
+
 from .oauth import NotionOAuth
 
 load_dotenv()
@@ -17,34 +20,34 @@ class NotionClient:
         self.headers = NotionOAuth().get_headers()
         self.database_id = DATABASE_ID
 
-    def create_activity_entry(self, activity_data):
+    def handle_activity_entry(self, activity_data):
+        """
+        Handles an activity entry by creating a new entry in the database.
+
+        Args:
+            activity_data (dict): The activity data to handle.
+
+        Returns:
+            dict: The response from the Notion API.
+        """
+        properties = define_properties(activity_data)
+
+        if self.database_id is None:
+            raise Exception("Database ID not found. Please create a database first.")
+
+        if self.is_activity_logged(activity_data):
+            print("Activity already logged.")
+            return
+
+        return self.create_activity_entry(properties)
+
+    def create_activity_entry(self, properties):
         url = f"{NOTION_BASE_URL}/pages"
         headers = self.headers
-        sport_type = activity_data.get("type", "")
-
-        # TODO: Add support for different sport types
-        # if sport_type == "Ride":
-        #     payload = self.create_ride_entry(activity_data)
-        # elif sport_type == "Swim":
-        #     payload = self.create_swim_entry(activity_data)
-        # else:
-        #     payload = self.create_run_entry(activity_data)
-
         payload = {
             "parent": {"database_id": self.database_id},
-            "properties": {
-                "Name": {
-                    "title": [{"text": {"content": activity_data.get("name", "")}}]
-                },
-                "Distance (m)": {"number": activity_data.get("distance", 0)},
-                "Moving Time (s)": {"number": activity_data.get("moving_time", 0)},
-                "Elapsed Time (s)": {"number": activity_data.get("elapsed_time", 0)},
-                "Type": {"select": {"name": sport_type}},
-                "Date": {"date": {"start": activity_data.get("start_date", "")}},
-                "Private Notes": {"notes": activity_data.get("private_notes", "")},
-            },
+            "properties": properties,
         }
-
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 200:
             print("Activity added to Notion database!")
@@ -53,14 +56,31 @@ class NotionClient:
                 f"Failed to add activity to Notion: {response.status_code} - {response.text}"
             )
 
-    # def create_ride_entry(self, activity_data):
-    #     pass
+    def is_activity_logged(self, activity_data):
+        """
+        Checks if an activity is already logged in the database.
 
-    # def create_swim_entry(self, activity_data):
-    #     pass
+        Args:
+            activity_data (dict): The activity data to check.
 
-    # def create_run_entry(self, activity_data):
-    #     pass
+        Returns:
+            bool: True if the activity is logged, False otherwise.
+        """
+        url = f"{NOTION_BASE_URL}/databases/{self.database_id}/query"
+        headers = self.headers
+        activity_id = jmes_path("id", activity_data, 0)
+        payload = {
+            "filter": {"property": "Activity ID", "number": {"equals": activity_id}}
+        }
+        response = requests.post(url, headers=headers, json=payload)
+        if response.status_code == 200:
+            data = response.json()
+
+            return len(data["results"]) > 0
+        else:
+            print(f"Error querying Notion database: {response.status_code}")
+            print(response.text)
+            return False
 
 
 # Usage
