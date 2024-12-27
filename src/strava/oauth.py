@@ -7,6 +7,8 @@ import time
 import requests
 from dotenv import load_dotenv, set_key
 
+from utils.extract import jmes_path
+
 load_dotenv()
 
 CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
@@ -43,9 +45,9 @@ class StravaOAuth:
 
         if response.status_code == 200:
             data = response.json()
-            self.access_token = data["access_token"]
-            self.token_expiry = time.time() + data["expires_in"]
-            self.refresh_token = data["refresh_token"]
+            self.access_token = jmes_path("access_token", data)
+            self.token_expiry = time.time() + jmes_path("expires_in", data)
+            self.refresh_token = jmes_path("refresh_token", data)
             self._save_tokens()
         else:
             raise Exception("Failed to refresh Strava access token")
