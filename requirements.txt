@@ -9,6 +9,7 @@ flake8==7.1.1
 identify==2.6.1
 idna==3.10
 isort==5.13.2
+jmespath==1.0.1
 mccabe==0.7.0
 mypy-extensions==1.0.0
 nodeenv==1.9.1
@@ -18,6 +19,7 @@ platformdirs==4.3.6
 pre-commit==3.5.0
 pycodestyle==2.12.1
 pyflakes==3.2.0
+python-dotenv==1.0.1
 PyYAML==6.0.2
 requests==2.32.3
 tomli==2.0.2
