@@ -1,6 +1,6 @@
 import requests
 
-from utils.extract import jmes_path
+from utils.extractors import jmes_path
 
 from .oauth import StravaOAuth
 

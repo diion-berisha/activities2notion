@@ -1,5 +1,5 @@
 from utils.coverters import convert_seconds
-from utils.extract import jmes_path
+from utils.extractors import jmes_path
 
 
 def define_properties(activity_data):

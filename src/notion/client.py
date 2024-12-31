@@ -3,7 +3,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from utils.extract import jmes_path
+from utils.extractors import jmes_path
 from utils.properties import define_properties
 
 from .oauth import NotionOAuth
@@ -16,7 +16,7 @@ NOTION_BASE_URL = "https://api.notion.com/v1"
 
 
 class NotionClient:
-    def __init__(self):
+    def __init__(self, database_id=None):
         self.headers = NotionOAuth().get_headers()
         self.database_id = DATABASE_ID
 
