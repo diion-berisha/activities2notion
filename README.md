@@ -39,24 +39,13 @@ Before running the project, you need to have the following installed:
     git clone https://github.com/yourusername/strava2notion.git
     cd strava2notion
     ```
-2. Install Dependencies
-    Install the required Python libraries by running:
+2. Run Setup.py
+   
+    This will install required dependencies and will create a `.env` file which you will need to update with your credentials!
     ```
-    pip install -r requirements.txt
-    ````
-3. Configure Environment Variables
-    Create a `.env file in the root directory by copying the .env.example which is also in the root directory. Should look something like this:
-    
+    python3 src/setup.py
     ```
-    STRAVA_CLIENT_ID=your_strava_client_id
-    STRAVA_CLIENT_SECRET=your_strava_client_secret
-    STRAVA_REFRESH_TOKEN=your_strava_refresh_token
-    STRAVA_ACCESS_TOKEN=your_strava_access_token
-    STRAVA_TOKEN_EXPIRY=your_strava_token_expiry_timestamp
-    NOTION_API_TOKEN=your_notion_api_token
-    NOTION_DATABASE_ID=your_notion_database_id
-    ```
-To get these values, follow the steps below.
+To get the credentials values, follow the steps below.
 
 ## Run the Project
 1. Run the Script
