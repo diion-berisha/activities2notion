@@ -41,5 +41,7 @@ jobs:
         pip install pytest pytest-cov  # Include pytest and plugins if needed
 
     - name: Run tests
+      env:
+          DATABASE_ID: 1234  # For testing purposes
       run: |
         pytest --cov=. --cov-report=xml  # Includes test coverage report
