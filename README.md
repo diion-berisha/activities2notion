@@ -10,7 +10,8 @@ This Python project fetches your latest Strava activities and uploads them to a 
 5. [Strava Authentication](#strava-authentication)
 6. [Notion Integration](#notion-integration)
 7. [Future Plans](#future-plans)
-8. [License](#license)
+8. [Important Documentations](#important-documentation)
+9. [License](#license)
 ---
 
 ## Overview
@@ -126,16 +127,19 @@ The project is in its early stages, and there are several exciting features and 
   5. Integration with Other Fitness Platforms:
 
      I also plan to extend the integration beyond Strava by adding support for other fitness tracking applications. Some of the platforms I intend to integrate include:
-        ```
-        Coros (I plan to work on this as the I currently use a Coros)
-        Garmin
-        Suunto
-        Apple Watch
-        ```
-
+        - Coros (I plan to work on this as I currently use a Coros)
+        - Garmin
+        - Suunto
+        - Apple Watch
+        
 Any contributions from the community who are interested in helping integrate these or other platforms are welcomed. If you have experience with any of these systems and want to contribute, please feel free to reach out or submit pull requests!
 
 I'd love for this project to be a team effort, not just an individual one!
+
+## Important Documentation
+  - [Strava API Docs](https://developers.strava.com/)
+  - [Notion API Docs](https://developers.notion.com/docs/getting-started)
+  - [Python Docs](https://docs.python.org/3.8/)
 ## License
 This project is licensed under the MIT License #### see the [LICENSE](https://github.com/diion-berisha/activities2notion/blob/main/LICENSE) file for details.
 
