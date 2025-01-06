@@ -67,3 +67,42 @@ def test_create_activity_entry(
             "parent": {"database_id": "db123"},
             "properties": properties,
         }
+
+
+@pytest.mark.parametrize(
+    "activity_data, post_status_code, post_response_data, expected_result",
+    [
+        pytest.param(
+            {"id": 12345},
+            200,
+            {"results": [{"id": "1"}]},
+            True,
+            id="activity_logged",
+        ),
+        pytest.param(
+            {"id": 12345},
+            200,
+            {"results": []},
+            False,
+            id="activity_not_logged",
+        ),
+        pytest.param(
+            {"id": 12345},
+            400,
+            {},
+            False,
+            id="error_response",
+        ),
+    ],
+)
+def test_is_activity_logged(
+    activity_data, post_status_code, post_response_data, expected_result
+):
+    with notion_client_helper.mock_post_response(
+        status_code=post_status_code,
+        response_data=post_response_data,
+    ):
+        notion_client = NotionClient()
+        notion_client.database_id = "db123"
+
+        assert notion_client.is_activity_logged(activity_data) == expected_result
