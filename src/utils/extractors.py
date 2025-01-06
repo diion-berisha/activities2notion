@@ -15,6 +15,4 @@ def jmes_path(pattern, data, default=None):
         any: The extracted data, or the default value if the pattern is not found.
     """
     result = jmespath.search(pattern, data)
-    if result is None and default is not None:
-        return default
-    return result
+    return result if result is not None else default

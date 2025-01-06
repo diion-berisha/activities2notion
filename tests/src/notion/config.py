@@ -13,15 +13,14 @@ class NotionClientTest:
         self.client = NotionClient(database_id=database_id)
 
     @staticmethod
+    @contextmanager
     def mock_post_response(status_code, response_data):
         """Helper function to mock the requests.post response."""
-        mock_post = patch("requests.post")
-        mock = mock_post.start()
-        mock.return_value.status_code = status_code
-        mock.return_value.json.return_value = response_data
-        return (
-            mock_post.stop
-        )  # Return the stop function to stop patching after the test
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = status_code
+            mock_post.return_value.json.return_value = response_data
+            mock_post.return_value.text = "Error occurred" if status_code != 200 else ""
+            yield mock_post
 
     @staticmethod
     @contextmanager
@@ -30,7 +29,19 @@ class NotionClientTest:
         is_activity_logged_return_value=False,
         create_activity_entry_return_value="Activity added to Notion database!",
     ):
-        """A context manager for mocking NotionClient methods."""
+        """
+        A context manager for mocking NotionClient methods and requests.post.
+
+        Args:
+            client_class (class): The NotionClient class to mock.
+            is_activity_logged_return_value (bool): The return value for is_activity_logged.
+            create_activity_entry_return_value (str): The return value for create_activity_entry.
+
+        Yields:
+            mock_is_logged: The mock object for is_activity_logged.
+            mock_create_entry: The mock object for create_activity_entry.
+        """
+
         with patch.object(
             client_class,
             "is_activity_logged",
