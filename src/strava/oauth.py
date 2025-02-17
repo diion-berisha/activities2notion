@@ -42,7 +42,7 @@ class StravaOAuth:
             Exception: If the refresh token is not set.
         """
         response = requests.post(
-            TOKEN_URL,
+            f"{TOKEN_URL}?scope=read,activity:read,activity:write",
             params={
                 "client_id": CLIENT_ID,
                 "client_secret": CLIENT_SECRET,
