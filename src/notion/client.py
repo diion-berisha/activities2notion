@@ -42,13 +42,24 @@ class NotionClient:
         return self.create_activity_entry(properties)
 
     def create_activity_entry(self, properties):
+        """
+        Sends a post request to the Notion API to create a new entry in the database.
+
+        Args:
+            properties (dict): The properties to add to the entry.
+
+        Returns:
+            dict: The response from the Notion API.
+        """
         url = f"{NOTION_BASE_URL}/pages"
         headers = self.headers
         payload = {
             "parent": {"database_id": self.database_id},
             "properties": properties,
         }
+
         response = requests.post(url, headers=headers, json=payload)
+
         if response.status_code == 200:
             print("Activity added to Notion database!")
         else:

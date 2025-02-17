@@ -12,6 +12,12 @@ class NotionOAuth:
         self.api_token = NOTION_TOKEN
 
     def get_headers(self):
+        """
+        Returns the headers required for the Notion API requests.
+
+        Returns:
+            dict: The headers required for the Notion API requests.
+        """
         return {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json",
