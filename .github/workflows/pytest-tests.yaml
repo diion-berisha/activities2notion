@@ -44,4 +44,4 @@ jobs:
       env:
           NOTION_DATABASE_ID: 1234  # For testing purposes
       run: |
-        pytest --cov=. --cov-report=xml  # Includes test coverage report
+        pytest -s --cov=. --cov-report=xml  # Includes test coverage report
