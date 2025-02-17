@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from src.strava.client import StravaClient
@@ -7,6 +9,10 @@ from . import config
 strava_client_helper = config.StravaClientTest()
 
 
+# Skipping for now until input is handled
+@pytest.mark.skipif(
+    "GITHUB_ACTIONS" in os.environ, reason="Skipping interactive test on GitHub Actions"
+)
 @pytest.mark.parametrize(
     "response_status_code, response_data, expected_result, expected_exception",
     [
